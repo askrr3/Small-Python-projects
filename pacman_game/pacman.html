@@ -1,0 +1,364 @@
+<html>
+<head>
+	<title>Pacman Demo</title>
+
+	<style type="text/css">
+		body{
+			background-color: black;
+			margin:0px;
+		}
+
+		div.row div{
+			width:20px;
+			height:20px;
+			display: inline-block;
+		}
+		div.brick{
+			background-color: blue;
+		}
+		div.coin{
+			background: url('coin.gif');
+			background-repeat: no-repeat;
+			background-position: center;
+		}
+		div.empty{
+		
+		}
+		div#pacman{
+			background: url('pacman.gif');
+			background-repeat: no-repeat;
+			background-position: center;
+			background-size: cover;
+			width: 20px;
+			height: 20px;
+			position:absolute;
+		}
+
+		div#ghost1{
+			background: url('ghost1.gif');
+			background-repeat: no-repeat;
+			background-position: center;
+			background-size: cover;
+			width: 20px;
+			height: 20px;
+			position:absolute;
+		}
+
+		div#ghost2{
+			background: url('ghost2.gif');
+			background-repeat: no-repeat;
+			background-position: center;
+			background-size: cover;
+			width: 20px;
+			height: 20px;
+			position:absolute;
+		}
+
+		div#ghost3{
+			background: url('ghost3.gif');
+			background-repeat: no-repeat;
+			background-position: center;
+			background-size: cover;
+			width: 20px;
+			height: 20px;
+			position:absolute;
+		}
+		div#ghost4{
+			background: url('ghost4.gif');
+			background-repeat: no-repeat;
+			background-position: center;
+			background-size: cover;
+			width: 20px;
+			height: 20px;
+			position:absolute;
+		}
+		div.fruit{
+			background: url('strawberry.png');
+			background-repeat: no-repeat;
+			background-position: center;
+			background-size: cover;
+			width: 20px;
+			height: 20px;
+			position:absolute;
+		}
+		div#score{
+			border: 1px solid white;
+			width:40px;
+			height:30px;
+			color: white;
+			text-align: center;
+		}
+
+	</style>
+	<link rel="stylesheet" type="text/css" href="pacman.css">
+  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+</head>
+<body>
+<!-- 	<div class ='row'>
+		<div class='brick'></div>
+		<div class='brick'></div>
+		<div class='brick'></div>
+		<div class='brick'></div>
+		<div class='brick'></div>
+		<div class='brick'></div>
+		<div class='brick'></div>
+		<div class='brick'></div>
+		<div class='brick'></div>
+		<div class='brick'></div>
+	</div>
+	<div class ='row'>
+		<div class='brick'></div>
+		<div class='coin'></div>
+		<div class='coin'></div>
+		<div class='pacman'></div>
+		<div class='coin'></div>
+		<div class='empty'></div>
+		<div class='coin'></div>
+		<div class='coin'></div>
+		<div class='coin'></div>
+		<div class='brick'></div>
+	</div>
+	<div class ='row'>
+		<div class='brick'></div>
+		<div class='coin'></div>
+		<div class='coin'></div>
+		<div class='coin'></div>
+		<div class='coin'></div>
+		<div class='coin'></div>
+		<div class='coin'></div>
+		<div class='coin'></div>
+		<div class='coin'></div>
+		<div class='brick'></div>
+	</div>
+	<div class ='row'>
+		<div class='brick'></div>
+		<div class='coin'></div>
+		<div class='coin'></div>
+		<div class='coin'></div>
+		<div class='coin'></div>
+		<div class='coin'></div>
+		<div class='coin'></div>
+		<div class='coin'></div>
+		<div class='coin'></div>
+		<div class='brick'></div>
+	</div>	
+	<div class ='row'>
+		<div class='brick'></div>
+		<div class='coin'></div>
+		<div class='coin'></div>
+		<div class='coin'></div>
+		<div class='coin'></div>
+		<div class='coin'></div>
+		<div class='coin'></div>
+		<div class='coin'></div>
+		<div class='coin'></div>
+		<div class='brick'></div>
+	</div>	
+	<div class ='row'>
+		<div class='brick'></div>
+		<div class='brick'></div>
+		<div class='brick'></div>
+		<div class='brick'></div>
+		<div class='brick'></div>
+		<div class='brick'></div>
+		<div class='brick'></div>
+		<div class='brick'></div>
+		<div class='brick'></div>
+		<div class='brick'></div>
+	</div> -->
+	<!-- List of feastures to build
+	1. have JS display the world of brick/coin/etc
+	2/ have the pacman move up and down -->
+	
+	<div>
+		<div id='world'></div>
+		<div id='pacman' style='top: 20px; left:20px;'></div>
+		<div id='score'>0</div>
+		<div id='ghost1' style='top: 20px; left:20px;'></div>
+		<div id='ghost2' style='top: 20px; left:20px;'></div>
+		<div id='ghost3' style='top: 20px; left:20px;'></div>
+		<div id='ghost4' style='top: 20px; left:20px;'></div>
+		<div id='fruit' style='top: 20px; left:20px;'></div>
+
+	</div>
+
+	<script type="text/javascript">
+	var world = [
+		[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+		[2,1,1,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,1,1,2],
+		[2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,1,1,2],
+		[2,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,2,1,1,2],
+		[2,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,1,1,2],
+		[2,1,1,1,1,1,2,2,2,2,2,2,2,2,1,1,1,1,1,2,2,2,2,2,2,1,1,1,1,1,2],
+		[2,2,2,2,1,1,2,1,1,1,1,1,1,1,1,2,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2],
+		[2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,2,1,2,1,1,1,1,1,1,1,1,1,2,2,2,2],
+		[2,2,2,2,1,1,1,1,2,2,2,2,1,2,2,2,1,2,1,2,2,2,2,2,2,1,1,1,1,1,2],
+		[2,2,2,2,1,2,2,1,1,1,1,1,1,1,1,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+		[2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+		[2,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,2],
+		[2,1,1,2,1,2,2,2,2,2,2,1,1,1,1,1,1,1,2,1,2,1,1,1,1,1,1,1,1,1,2],
+		[2,2,2,2,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,2,2,2,1,1,1,1,2,2,2,2],
+		[2,1,1,2,1,1,1,1,1,2,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2],
+		[2,1,1,1,1,1,1,1,1,2,1,1,1,0,0,0,2,2,1,2,1,1,1,1,1,1,1,1,1,1,2],
+		[2,2,2,2,1,2,2,2,2,2,2,2,1,1,1,1,1,1,1,2,2,2,2,2,2,2,1,1,1,1,2],
+		[2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+		[2,2,2,2,1,1,2,1,1,1,1,1,2,1,1,2,1,1,2,2,2,1,1,1,1,1,1,1,1,1,2],
+		[2,2,2,2,1,1,2,2,2,2,2,1,2,1,1,2,1,1,1,1,2,2,2,1,1,1,1,2,2,2,2],
+		[2,2,2,2,1,1,1,1,1,1,1,1,2,1,1,2,1,2,1,1,1,1,1,1,1,1,1,2,2,2,2],
+		[2,2,2,2,1,1,1,1,2,2,2,2,2,2,2,2,1,2,2,2,1,1,1,1,1,1,1,2,2,2,2],
+		[2,1,1,1,1,2,2,2,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,1,1,1,1,2],
+		[2,1,1,1,1,1,1,1,1,1,1,2,1,1,1,1,2,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+		[2,1,1,1,1,1,1,1,1,1,1,2,1,1,1,1,2,2,2,1,1,1,1,1,1,1,1,1,1,1,2],
+		[2,2,2,2,1,1,1,1,1,1,1,2,1,1,1,1,1,1,2,1,2,1,1,1,1,1,1,2,2,2,2],
+		[2,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+		[2,1,1,1,1,1,1,1,2,1,1,2,1,1,1,1,1,1,1,2,2,2,2,2,2,2,1,1,1,1,2],
+		[2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+		[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+
+		];
+		var fruit = {
+			x:4,
+			y:4
+			
+
+		}
+		var score =0;
+
+		var pacman = {
+			x: 14,
+			y: 14
+
+		}
+		var ghost1 = { 
+			x: 14,
+			y: 1   
+
+		}
+		var ghost2 = { 
+			x: 10,
+			y: 1   
+
+		}
+		var ghost3 = { 
+			x: 19,
+			y: 1   
+
+		}
+		var ghost4 = { 
+			x: 14,
+			y: 4   
+
+		}
+
+	function displayWorld(){
+		var output = '';
+
+		for(var i=0; i<world.length; i++){
+			output += "\n<div class='row'>\n";
+			for(var j=0; j<world[i].length; j++){
+				if(world[i][j] == 2)
+					output += "<div class='brick'></div>"
+				else if(world[i][j] == 1)
+					output += "<div class='coin'></div>"
+				if(world[i][j] == 0)
+					output += "<div class='empty'></div>"
+				if(world[i][j] == 3)
+					output += "<div class='fruit'></div>"
+			}
+			output+= "\n</div>"
+		}
+			// console.log(output);
+	document.getElementById('world').innerHTML = output;
+			}
+		function displayPacman(){
+			document.getElementById('pacman').style.top= pacman.y*20+'px'
+			document.getElementById('pacman').style.left= pacman.x*20+'px'
+		}
+		function displayScore(){
+			document.getElementById('score').innerHTML = score;
+		}
+		function displayFruit(){
+			document.getElementById('fruit').style.top = fruit.y*20+'px';
+			document.getElementById('fruit').style.left = fruit.x*20+'px';
+		}
+		function displayGhost1(){
+			document.getElementById('ghost1').style.top = ghost1.y*20+'px';
+			document.getElementById('ghost1').style.left = ghost1.x*20+'px';
+		}
+		function displayGhost2(){
+			document.getElementById('ghost2').style.top = ghost2.y*20+'px';
+			document.getElementById('ghost2').style.left = ghost2.x*20+'px';
+		}
+		function displayGhost3(){
+			document.getElementById('ghost3').style.top = ghost3.y*20+'px';
+			document.getElementById('ghost3').style.left = ghost3.x*20+'px';
+		}
+		function displayGhost4(){
+			document.getElementById('ghost4').style.top = ghost4.y*20+'px';
+			document.getElementById('ghost4').style.left = ghost4.x*20+'px';
+		}
+		// function 
+		// 	document.getElementById("").style.visibility="visible"; 
+		// function enemyMove(){
+		// 	document.getElementById('ghost').
+		// 	document.getElementById('ghost').
+
+		// }
+		displayWorld();
+		displayPacman();
+		displayScore();
+		displayFruit();
+		displayGhost1();
+		displayGhost2();
+		displayGhost3();
+		displayGhost4();
+
+	document.onkeydown = function(e){
+		if(e.keyCode == 37 && world[pacman.y][pacman.x-1] != 2){
+			pacman.x --;
+				document.getElementById('pacman').style.transform = "rotate(180deg)"
+			}
+			else if(e.keyCode == 39 && world[pacman.y][pacman.x+1] != 2){
+				pacman.x ++;
+				document.getElementById('pacman').style.transform = "rotate(360deg)"
+
+			}
+			else if(e.keyCode == 38 && world[pacman.y-1][pacman.x] != 2){
+				pacman.y --;
+				document.getElementById('pacman').style.transform = "rotate(270deg)"
+
+			}
+			else if(e.keyCode == 40 && world[pacman.y+1][pacman.x] != 2){
+				pacman.y ++;
+				document.getElementById('pacman').style.transform = "rotate(90deg)"
+
+			}
+			if(world[pacman.y][pacman.x] == 3){
+				world[pacman.y][pacman.x] = 0
+				score+=50;
+				 // else (world[pacman.y][pacman.x] == 3){
+				 // 	document.getElementById("fruit").style.display="none";
+				 // }
+				displayScore();
+				displayWorld();
+				displayFruit();
+			}
+			if(world[pacman.y][pacman.x] == 1){
+				world[pacman.y][pacman.x] = 0
+				score+=10;
+				displayScore();
+				displayWorld();
+			}
+		
+
+
+			
+		console.log(e.keyCode);
+		displayPacman();
+		displayWorld();
+	}
+	</script>
+
+
+</body>
+</html>
